@@ -79,18 +79,19 @@ if prompt := st.chat_input("What is up?"):
             assistant_message = response['choices'][0]['message']['content']
             st.markdown(assistant_message)
             st.session_state.messages.append({"role": "assistant", "content": assistant_message})
-    except openai.error.InvalidRequestError as e:
-        st.error(f"Invalid Request Error: {e}")
-        st.session_state.messages.append({"role": "system", "content": f"Error: {e}"})
-    except openai.error.AuthenticationError as e:
-        st.error(f"Authentication Error: {e}")
-        st.session_state.messages.append({"role": "system", "content": f"Error: {e}"})
-    except openai.error.OpenAIError as e:  # Catching all OpenAI errors
-        st.error(f"OpenAI Error: {e}")
-        st.session_state.messages.append({"role": "system", "content": f"Error: {e}"})
+    except openai.APIConnectionError as e:
+        st.error("The server could not be reached.")
+        st.write(f"Error details: {e.__cause__}")
+    except openai.RateLimitError as e:
+        st.error("A 429 status code was received; we should back off a bit.")
+    except openai.APIStatusError as e:
+        st.error("Another non-200-range status code was received.")
+        st.write(f"Status code: {e.status_code}")
+        st.write(f"Response: {e.response}")
+    except openai.OpenAIError as e:  # Catching all OpenAI errors
+        st.error(f"An unexpected OpenAI error occurred: {e}")
     except Exception as e:  # Catch all other exceptions
-        st.error(f"Unexpected Error: {e}")
-        st.session_state.messages.append({"role": "system", "content": f"Error: {e}"})
+        st.error(f"An unexpected error occurred: {e}")
 
 # Output the session state for debugging
 st.write("Current session state:", st.session_state)
