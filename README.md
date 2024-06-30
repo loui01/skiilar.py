@@ -1,2 +1,2 @@
-# skiilar.py
+# skiilar
 AI immigration Chabot Streamlit
