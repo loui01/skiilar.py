@@ -80,10 +80,17 @@ if prompt := st.chat_input("What is up?"):
             st.markdown(assistant_message)
             st.session_state.messages.append({"role": "assistant", "content": assistant_message})
     except openai.error.InvalidRequestError as e:
-        st.error(f"An error occurred: {e}")
+        st.error(f"Invalid Request Error: {e}")
+        st.session_state.messages.append({"role": "system", "content": f"Error: {e}"})
     except openai.error.AuthenticationError as e:
-        st.error(f"Authentication error: {e}")
+        st.error(f"Authentication Error: {e}")
+        st.session_state.messages.append({"role": "system", "content": f"Error: {e}"})
     except openai.error.OpenAIError as e:  # Catching all OpenAI errors
-        st.error(f"An unexpected OpenAI error occurred: {e}")
+        st.error(f"OpenAI Error: {e}")
+        st.session_state.messages.append({"role": "system", "content": f"Error: {e}"})
     except Exception as e:  # Catch all other exceptions
-        st.error(f"An unexpected error occurred: {e}")
+        st.error(f"Unexpected Error: {e}")
+        st.session_state.messages.append({"role": "system", "content": f"Error: {e}"})
+
+# Output the session state for debugging
+st.write("Current session state:", st.session_state)
