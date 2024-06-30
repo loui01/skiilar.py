@@ -81,5 +81,7 @@ if prompt := st.chat_input("What is up?"):
             st.session_state.messages.append({"role": "assistant", "content": assistant_message})
     except openai.error.InvalidRequestError as e:
         st.error(f"An error occurred: {e}")
+    except openai.error.OpenAIError as e:  # Catching all OpenAI errors
+        st.error(f"An unexpected OpenAI error occurred: {e}")
     except Exception as e:  # Catch all other exceptions
         st.error(f"An unexpected error occurred: {e}")
